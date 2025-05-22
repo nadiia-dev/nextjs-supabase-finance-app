@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import TransactionList from "./components/transaction-list";
 import TransactionListFallback from "./components/transaction-list-skeletons";
 import TrendFallback from "./components/trend-fallbask";
 import Trend from "./components/trend";
@@ -9,6 +8,7 @@ import { PlusCircle } from "lucide-react";
 import { sizes, variants } from "@/lib/variants";
 import { types } from "@/lib/constants";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
+import TransactionListWrapper from "./components/transaction-list-wrapper";
 
 const page = async ({ searchParams }) => {
   const range = searchParams?.range ?? "last30days";
@@ -49,7 +49,7 @@ const page = async ({ searchParams }) => {
 
       <section>
         <Suspense fallback={<TransactionListFallback />}>
-          <TransactionList range={range} />
+          <TransactionListWrapper range={range} />
         </Suspense>
       </section>
     </div>

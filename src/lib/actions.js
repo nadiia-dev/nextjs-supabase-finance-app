@@ -14,3 +14,14 @@ export const createTransaction = async (data) => {
   }
   revalidatePath("/dashboard");
 };
+
+export const fetchTransactions = async (range, limit = 10, offset = 0) => {
+  const supabase = await createClient();
+  let { data, error } = await supabase.rpc("fetch_transactions", {
+    limit_arg: limit,
+    offset_arg: offset,
+    range_arg: range,
+  });
+  if (error) throw new Error("Can`t fetch transactions");
+  return data;
+};
