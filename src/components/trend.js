@@ -2,7 +2,7 @@ import useFormatCurrency from "@/hooks/use-format-currency";
 import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
 import { useMemo } from "react";
 
-const Trend = ({ type, amount, prevAmount }) => {
+const BaseTrend = ({ type, amount, prevAmount }) => {
   const colorClasses = {
     Income: "text-green-700 dark:text-green-300",
     Expense: "text-red-700 dark:text-red-300",
@@ -40,4 +40,4 @@ const Trend = ({ type, amount, prevAmount }) => {
   );
 };
 
-export default Trend;
+export default BaseTrend;

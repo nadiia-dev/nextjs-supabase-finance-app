@@ -2,11 +2,12 @@ import Button from "@/components/button";
 import PageHeader from "@/components/page-header";
 import TransactionItem from "@/components/transaction-item";
 import TransactionSummary from "@/components/transaction-summary";
-import Trend from "@/components/trend";
+import BaseTrend from "@/components/trend";
 import Separator from "@/components/separator";
 import Input from "@/components/input";
 import Select from "@/components/select";
 import Label from "@/components/label";
+import Skeleton from "@/components/skeleton";
 
 const page = () => {
   return (
@@ -25,10 +26,10 @@ const page = () => {
         <h2 className="mb-4 text-lg font-mono">Trend</h2>
         <Separator />
         <div className="flex space-x-8">
-          <Trend type="Income" amount={1000} prevAmount={900} />
-          <Trend type="Expense" amount={12000} prevAmount={10000} />
-          <Trend type="Investment" amount={7000} prevAmount={11100} />
-          <Trend type="Saving" amount={500} prevAmount={950} />
+          <BaseTrend type="Income" amount={1000} prevAmount={900} />
+          <BaseTrend type="Expense" amount={12000} prevAmount={10000} />
+          <BaseTrend type="Investment" amount={7000} prevAmount={11100} />
+          <BaseTrend type="Saving" amount={500} prevAmount={950} />
         </div>
       </div>
 
@@ -121,6 +122,24 @@ const page = () => {
             <Label className="ml-2" htmlFor="terms">
               Accept terms
             </Label>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h2 className="mb-4 text-lg font-mono">Loading Skeleton</h2>
+        <Separator />
+        <div className="space-y-8">
+          <div className="flex space-x-4">
+            <Skeleton />
+            <Skeleton />
+            <Skeleton />
+          </div>
+
+          <div className="space-y-4">
+            <Skeleton />
+            <Skeleton />
+            <Skeleton />
           </div>
         </div>
       </div>
