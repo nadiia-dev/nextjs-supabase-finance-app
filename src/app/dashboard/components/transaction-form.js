@@ -15,6 +15,7 @@ import { useState } from "react";
 const TransactionForm = ({ initialData }) => {
   const router = useRouter();
   const [isSaving, setSaving] = useState(false);
+  const [finalErr, setFinalErr] = useState();
   const {
     register,
     handleSubmit,
@@ -32,11 +33,12 @@ const TransactionForm = ({ initialData }) => {
 
   const onSubmit = async (data) => {
     setSaving(true);
+    setLastError();
     try {
       await createTransaction(data);
       router.push("/dashboard");
     } catch (error) {
-      console.log(error);
+      setLastError(error);
     } finally {
       setSaving(false);
     }
@@ -92,6 +94,7 @@ const TransactionForm = ({ initialData }) => {
         </div>
 
         <div className="flex justify-between items-center">
+          <div>{lastError && <FormError error={lastError} />}</div>
           <Button type="submit" disabled={isSaving}>
             Save
           </Button>
