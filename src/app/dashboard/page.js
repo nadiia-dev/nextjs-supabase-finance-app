@@ -7,8 +7,10 @@ import Range from "./components/range";
 import Link from "next/link";
 import { PlusCircle } from "lucide-react";
 import { sizes, variants } from "@/lib/variants";
+import { types } from "@/lib/constants";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 
-const page = () => {
+const page = async () => {
   return (
     <div className="space-y-8">
       <section className="flex justify-between items-center">
@@ -19,12 +21,18 @@ const page = () => {
       </section>
 
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-        <Suspense fallback={<TrendFallback />}>
-          <Trend type="Income" />
-          <Trend type="Expense" />
-          <Trend type="Investment" />
-          <Trend type="Saving" />
-        </Suspense>
+        {types.map((type) => (
+          <ErrorBoundary
+            key={type}
+            fallback={
+              <div className="text-red-500">Cannot fetch {type} trend data</div>
+            }
+          >
+            <Suspense fallback={<TrendFallback />}>
+              <Trend type={type} />
+            </Suspense>
+          </ErrorBoundary>
+        ))}
       </section>
 
       <section className="flex justify-between items-center">

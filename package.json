@@ -12,8 +12,11 @@
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
     "@radix-ui/react-separator": "^1.1.7",
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.49.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dotenv": "^16.5.0",
     "json-server": "^1.0.0-beta.3",
     "lucide-react": "^0.511.0",
     "next": "15.3.2",
@@ -26,6 +29,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@faker-js/faker": "^9.8.0",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",

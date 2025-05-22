@@ -1,11 +1,15 @@
 import Separator from "@/components/separator";
 import TransactionItem from "@/components/transaction-item";
 import TransactionSummary from "@/components/transaction-summary";
+import { createClient } from "@/lib/supabase/server";
 import { transactionsByDate } from "@/lib/transactionsByDate";
 
 const TransactionList = async () => {
-  const resp = await fetch("http://localhost:3100/transactions");
-  const transactions = await resp.json();
+  const supabase = await createClient();
+  const { data: transactions, error } = await supabase
+    .from("transactions")
+    .select();
+
   const grouped = transactionsByDate(transactions);
   return (
     <div className="space-y-8">

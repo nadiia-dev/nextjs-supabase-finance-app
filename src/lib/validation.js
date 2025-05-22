@@ -8,7 +8,7 @@ export const transactionSchema = z.object({
     message: "Amount must be at least 1",
   }),
   description: z.string().optional(),
-  ceated_at: z.string().refine((val) => !isNaN(Date.parse(val)), {
+  created_at: z.string().refine((val) => !isNaN(Date.parse(val)), {
     message: "Date needs to contain a valid date",
   }),
 });

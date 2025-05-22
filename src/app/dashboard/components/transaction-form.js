@@ -1,14 +1,20 @@
+"use client";
 import Button from "@/components/button";
 import FormError from "@/components/form-error";
 import Input from "@/components/input";
 import Label from "@/components/label";
 import Select from "@/components/select";
 import { categories, types } from "@/lib/constants";
-import { transactionSchema } from "@/lib/valiadtion";
+import { transactionSchema } from "@/lib/validation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { createTransaction } from "@/lib/actions";
+import { useState } from "react";
 
 const TransactionForm = ({ initialData }) => {
+  const router = useRouter();
+  const [isSaving, setSaving] = useState(false);
   const {
     register,
     handleSubmit,
@@ -18,19 +24,38 @@ const TransactionForm = ({ initialData }) => {
   } = useForm({
     mode: "onTouched",
     resolver: zodResolver(transactionSchema),
-    defaultValues: initialData ?? {
+    defaultValues: {
       created_at: new Date().toISOString().split("T")[0],
     },
   });
+  const type = watch("type");
 
-  const onSubmit = () => {};
+  const onSubmit = async (data) => {
+    setSaving(true);
+    try {
+      await createTransaction(data);
+      router.push("/dashboard");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label className="mb-1">Type</Label>
-          <Select>
+          <Select
+            {...register("type", {
+              onChange: (e) => {
+                if (e.target.value !== "Expense") {
+                  setValue("category", "");
+                }
+              },
+            })}
+          >
             {types.map((type) => (
               <option key={type}>{type}</option>
             ))}
@@ -40,7 +65,7 @@ const TransactionForm = ({ initialData }) => {
 
         <div>
           <Label className="mb-1">Category</Label>
-          <Select>
+          <Select {...register("category")} disabled={type !== "Expense"}>
             {categories.map((category) => (
               <option key={category}>{category}</option>
             ))}
@@ -62,12 +87,14 @@ const TransactionForm = ({ initialData }) => {
 
         <div className="col-span-1 md:col-span-2">
           <Label className="mb-1">Description</Label>
-          <Input type="number" {...register("description")} />
+          <Input type="text" {...register("description")} />
           <FormError error={errors.description} />
         </div>
 
         <div className="flex justify-between items-center">
-          <Button type="submit">Save</Button>
+          <Button type="submit" disabled={isSaving}>
+            Save
+          </Button>
         </div>
       </div>
     </form>
