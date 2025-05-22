@@ -1,5 +1,9 @@
 import PageHeader from "@/components/page-header";
 
+export const metadata = {
+  title: "Dashboard",
+};
+
 const layout = ({ children }) => {
   return (
     <>
