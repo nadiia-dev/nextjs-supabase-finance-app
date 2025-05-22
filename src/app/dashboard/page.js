@@ -10,7 +10,8 @@ import { sizes, variants } from "@/lib/variants";
 import { types } from "@/lib/constants";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 
-const page = async () => {
+const page = async ({ searchParams }) => {
+  const range = searchParams?.range ?? "last30days";
   return (
     <div className="space-y-8">
       <section className="flex justify-between items-center">
@@ -29,7 +30,7 @@ const page = async () => {
             }
           >
             <Suspense fallback={<TrendFallback />}>
-              <Trend type={type} />
+              <Trend type={type} range={range} />
             </Suspense>
           </ErrorBoundary>
         ))}
