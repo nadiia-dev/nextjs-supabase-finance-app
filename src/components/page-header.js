@@ -1,6 +1,9 @@
 import Link from "next/link";
+import ThemeToggle from "./theme-toggle";
+import getServerDarkMode from "@/hooks/use-server-dark-mode";
 
 const PageHeader = ({ className }) => {
+  const theme = getServerDarkMode();
   return (
     <header className={`flex justify-between items-center ${className}`}>
       <Link
@@ -10,7 +13,7 @@ const PageHeader = ({ className }) => {
         Finance App
       </Link>
       <div className="flex items-center">
-        <div>Dark mode toggle</div>
+        <ThemeToggle defaultMode={theme} />
         <div>User dropdown</div>
       </div>
     </header>

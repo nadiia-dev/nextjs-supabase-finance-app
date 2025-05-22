@@ -1,5 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import CookieWrapper from "@/components/cookie-wrapper";
+import getServerDarkMode from "@/hooks/use-server-dark-mode";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -9,10 +11,11 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const theme = getServerDarkMode();
   return (
-    <html lang="en">
+    <html lang="en" className={theme}>
       <body className={`${inter.className} min-h-screen flex flex-col px-8`}>
-        {children}
+        <CookieWrapper>{children}</CookieWrapper>
       </body>
     </html>
   );
