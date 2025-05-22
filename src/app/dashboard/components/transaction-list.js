@@ -4,11 +4,15 @@ import TransactionSummary from "@/components/transaction-summary";
 import { createClient } from "@/lib/supabase/server";
 import { transactionsByDate } from "@/lib/transactionsByDate";
 
-const TransactionList = async () => {
+const TransactionList = async ({ range }) => {
   const supabase = await createClient();
-  const { data: transactions, error } = await supabase
-    .from("transactions")
-    .select();
+
+  let { data: transactions, error } = await supabase.rpc("fetch_transactions", {
+    // limit_arg,
+    // offset_arg,
+    range_arg: range,
+  });
+  if (error) throw new Error("Can`t fetch transactions");
 
   const grouped = transactionsByDate(transactions);
   return (
