@@ -2,6 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "./supabase/server";
 import { transactionSchema } from "./validation";
+import { redirect } from "next/navigation";
 
 export const createTransaction = async (data) => {
   const validated = transactionSchema.safeParse(data);
@@ -71,3 +72,9 @@ export async function login(prevState, formData) {
     message: `Email sent to ${email}`,
   };
 }
+
+export const signout = async () => {
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signOut();
+  redirect("/login");
+};
