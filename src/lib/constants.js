@@ -7,3 +7,9 @@ export const categories = [
   "Education",
   "Other",
 ];
+export const dateRangeVals = [
+  "last24hours",
+  "last7days",
+  "last30days",
+  "last12months",
+];

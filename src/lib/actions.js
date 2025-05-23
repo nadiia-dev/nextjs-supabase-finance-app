@@ -1,7 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { createClient } from "./supabase/server";
-import { transactionSchema } from "./validation";
+import { settingsSchema, transactionSchema } from "./validation";
 import { redirect } from "next/navigation";
 
 export const createTransaction = async (data) => {
@@ -128,5 +128,38 @@ export const uploadAvatar = async (prevState, formData) => {
 
   return {
     message: "Updated the user avatar",
+  };
+};
+
+export const updateSettings = async (prevState, formData) => {
+  const validated = settingsSchema.safeParse({
+    fullName: formData.get("fullName"),
+    defaultView: formData.get("defaultView"),
+  });
+
+  if (!validated.success) {
+    return {
+      errors: validated.error.flatten().fieldErrors,
+    };
+  }
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({
+    data: {
+      fullName: validated.data.fullName,
+      defaultView: validated.data.defaultView,
+    },
+  });
+
+  if (error) {
+    return {
+      error: true,
+      message: "Failed updating setting",
+      errors: {},
+    };
+  }
+
+  return {
+    message: "Updated user settings",
+    errors: {},
   };
 };

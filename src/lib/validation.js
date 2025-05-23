@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { categories, types } from "./constants";
+import { categories, dateRangeVals, types } from "./constants";
 
 export const transactionSchema = z
   .object({
@@ -30,3 +30,8 @@ export const transactionSchema = z
       message: "Category is required for Expense",
     }
   );
+
+export const settingsSchema = z.object({
+  fullName: z.string().min(2),
+  defaultView: z.enum(dateRangeVals),
+});
