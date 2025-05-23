@@ -2,8 +2,16 @@ import useFormatCurrency from "@/hooks/use-format-currency";
 import { HandCoins, Wallet, Landmark, PiggyBank, Pencil } from "lucide-react";
 import Link from "next/link";
 import { sizes, variants } from "@/lib/variants";
+import TransactionRemove from "./transaction-remove";
 
-const TransactionItem = ({ id, type, category, description, amount }) => {
+const TransactionItem = ({
+  id,
+  type,
+  category,
+  description,
+  amount,
+  onRemove,
+}) => {
   const typesMap = {
     Income: {
       icon: HandCoins,
@@ -49,6 +57,7 @@ const TransactionItem = ({ id, type, category, description, amount }) => {
         >
           <Pencil className="w-4 h-4" />
         </Link>
+        <TransactionRemove id={id} onRemove={onRemove} />
       </div>
     </div>
   );

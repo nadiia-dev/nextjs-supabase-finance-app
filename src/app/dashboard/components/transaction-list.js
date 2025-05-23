@@ -27,6 +27,11 @@ const TransactionList = ({ initialTransactions, range }) => {
       setLoading(false);
     }
   };
+
+  const handleRemoved = (id) => () => {
+    setTransactions((prev) => [...prev].filter((t) => t.id !== id));
+  };
+
   return (
     <div className="space-y-8">
       {Object.entries(grouped).map(([date, { transactions, amount }]) => (
@@ -36,7 +41,10 @@ const TransactionList = ({ initialTransactions, range }) => {
           <section className="space-y-4">
             {transactions.map((transaction) => (
               <div key={transaction.id}>
-                <TransactionItem {...transaction} />
+                <TransactionItem
+                  {...transaction}
+                  onRemove={handleRemoved(transaction.id)}
+                />
               </div>
             ))}
           </section>
