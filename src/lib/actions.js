@@ -1,6 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { createClient } from "./supabase/server";
+import { transactionSchema } from "./validation";
 
 export const createTransaction = async (data) => {
   const validated = transactionSchema.safeParse(data);
@@ -31,6 +32,22 @@ export const deleteTransaction = async (id) => {
   const { error } = await supabase.from("transactions").delete().eq("id", id);
   if (error) {
     throw new Error("Failed deleting the transaction");
+  }
+  revalidatePath("/dashboard");
+};
+
+export const editTransaction = async (id, data) => {
+  const validated = transactionSchema.safeParse(data);
+  if (!validated.success) {
+    throw new Error("Invalid data");
+  }
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("transactions")
+    .update(data)
+    .eq("id", id);
+  if (error) {
+    throw new Error("Failed creating the transaction");
   }
   revalidatePath("/dashboard");
 };

@@ -9,7 +9,7 @@ import { transactionSchema } from "@/lib/validation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { createTransaction } from "@/lib/actions";
+import { createTransaction, editTransaction } from "@/lib/actions";
 import { useState } from "react";
 
 const TransactionForm = ({ initialData }) => {
@@ -25,20 +25,26 @@ const TransactionForm = ({ initialData }) => {
   } = useForm({
     mode: "onTouched",
     resolver: zodResolver(transactionSchema),
-    defaultValues: {
+    defaultValues: initialData ?? {
       created_at: new Date().toISOString().split("T")[0],
     },
   });
   const type = watch("type");
+  const editing = Boolean(initialData);
 
   const onSubmit = async (data) => {
     setSaving(true);
-    setLastError();
+    setFinalErr();
+
     try {
-      await createTransaction(data);
+      if (editing) {
+        await editTransaction(initialData.id, data);
+      } else {
+        await createTransaction(data);
+      }
       router.push("/dashboard");
     } catch (error) {
-      setLastError(error);
+      setFinalErr(error);
     } finally {
       setSaving(false);
     }
@@ -59,7 +65,9 @@ const TransactionForm = ({ initialData }) => {
             })}
           >
             {types.map((type) => (
-              <option key={type}>{type}</option>
+              <option key={type} value={type}>
+                {type}
+              </option>
             ))}
           </Select>
           <FormError error={errors.type} />
@@ -69,7 +77,9 @@ const TransactionForm = ({ initialData }) => {
           <Label className="mb-1">Category</Label>
           <Select {...register("category")} disabled={type !== "Expense"}>
             {categories.map((category) => (
-              <option key={category}>{category}</option>
+              <option key={category} value={category}>
+                {category}
+              </option>
             ))}
           </Select>
           <FormError error={errors.category} />
@@ -77,7 +87,7 @@ const TransactionForm = ({ initialData }) => {
 
         <div>
           <Label className="mb-1">Date</Label>
-          <Input {...register("created_at")} />
+          <Input {...register("created_at")} disabled={editing} />
           <FormError error={errors.created_at} />
         </div>
 
@@ -94,7 +104,7 @@ const TransactionForm = ({ initialData }) => {
         </div>
 
         <div className="flex justify-between items-center">
-          <div>{lastError && <FormError error={lastError} />}</div>
+          <div>{finalErr && <FormError error={finalErr} />}</div>
           <Button type="submit" disabled={isSaving}>
             Save
           </Button>
