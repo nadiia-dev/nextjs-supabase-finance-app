@@ -51,3 +51,23 @@ export const editTransaction = async (id, data) => {
   }
   revalidatePath("/dashboard");
 };
+
+export async function login(prevState, formData) {
+  const supabase = await createClient();
+  const email = formData.get("email");
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      shouldCreateUser: true,
+    },
+  });
+  if (error) {
+    return {
+      error: true,
+      message: "Error authenticating!",
+    };
+  }
+  return {
+    message: `Email sent to ${email}`,
+  };
+}
