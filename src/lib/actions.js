@@ -94,4 +94,20 @@ export const uploadAvatar = async (formData) => {
       message: "Error uploading avatar",
     };
   }
+
+  const { error: dataUpdateError } = await supabase.auth.updateUser({
+    data: {
+      avatar: fileName,
+    },
+  });
+  if (dataUpdateError) {
+    return {
+      error: true,
+      message: "Error associating the avatar with the user",
+    };
+  }
+
+  return {
+    message: "Updated the user avatar",
+  };
 };
