@@ -79,8 +79,7 @@ export const signout = async () => {
   redirect("/login");
 };
 
-export const uploadAvatar = async (formData) => {
-  console.log(formData);
+export const uploadAvatar = async (prevState, formData) => {
   const supabase = await createClient();
   const file = formData.get("file");
   const fileExt = file.name.split(".").pop();
@@ -93,6 +92,26 @@ export const uploadAvatar = async (formData) => {
       error: true,
       message: "Error uploading avatar",
     };
+  }
+
+  const { data: userData, userError } = await supabase.auth.getUser();
+  if (userError) {
+    return {
+      error: true,
+      message: "Something went wrong, try again",
+    };
+  }
+
+  const avatar = userData.user.user_metadata.avatar;
+  if (avatar) {
+    const { error } = await supabase.storage.from("avatars").remove([avatar]);
+
+    if (error) {
+      return {
+        error: true,
+        message: "Something went wrong, try again",
+      };
+    }
   }
 
   const { error: dataUpdateError } = await supabase.auth.updateUser({
