@@ -1,3 +1,4 @@
+"use client";
 import { Loader, X } from "lucide-react";
 import Button from "./button";
 import { useState } from "react";
